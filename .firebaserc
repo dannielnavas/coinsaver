@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "coinsaver-7c342": {
+      "hosting": {
+        "coinsaver": [
+          "coinsaver-7c342"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "coinsaver-7c342"
+  }
+}
