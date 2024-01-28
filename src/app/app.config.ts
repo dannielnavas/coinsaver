@@ -1,6 +1,7 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
+import { environment } from '@/environments/environment';
 import {
   ScreenTrackingService,
   UserTrackingService,
@@ -18,13 +19,13 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       provideFirebaseApp(() =>
         initializeApp({
-          projectId: 'coinsaver-7c342',
-          appId: '1:975051839716:web:9d79fe7f3d5ec36dc374f1',
-          storageBucket: 'coinsaver-7c342.appspot.com',
-          apiKey: 'AIzaSyACh5SvzxfHAjF_aH1haQ8e0zuAt7gjfDo',
-          authDomain: 'coinsaver-7c342.firebaseapp.com',
-          messagingSenderId: '975051839716',
-          measurementId: 'G-FF0YFNLSN2',
+          projectId: environment.firebase.projectId,
+          appId: environment.firebase.appId,
+          storageBucket: environment.firebase.storageBucket,
+          apiKey: environment.firebase.apiKey,
+          authDomain: environment.firebase.authDomain,
+          messagingSenderId: environment.firebase.messagingSenderId,
+          measurementId: environment.firebase.measurementId,
         })
       )
     ),
