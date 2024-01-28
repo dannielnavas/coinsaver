@@ -1,7 +1,13 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  PreloadAllModules,
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+} from '@angular/router';
 
 import { environment } from '@/environments/environment';
+import { provideHttpClient } from '@angular/common/http';
 import {
   ScreenTrackingService,
   UserTrackingService,
@@ -15,7 +21,12 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withPreloading(PreloadAllModules)
+    ),
+    provideHttpClient(),
     importProvidersFrom(
       provideFirebaseApp(() =>
         initializeApp({
