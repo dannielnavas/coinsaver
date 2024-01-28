@@ -1,0 +1,17 @@
+@import 'index';
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  @include for-tablet-portrait-up {
+    width: calc(100% - 32px);
+    padding: 0 16px;
+  }
+
+  @include for-phone-only {
+    width: calc(100% - 32px);
+    padding: 0 16px;
+  }
+}
