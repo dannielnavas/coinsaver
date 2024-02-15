@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  redirect = ['/'];
+  redirect = [`/dashboard`];
 
   constructor(@Optional() private auth: Auth, private router: Router) {}
 
