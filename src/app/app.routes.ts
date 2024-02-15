@@ -22,4 +22,11 @@ export const routes: Routes = [
         (m) => m.SignupComponent
       ),
   },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./domains/private-side/pages/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      ),
+  },
 ];
