@@ -1,4 +1,8 @@
-import { ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  isDevMode,
+} from '@angular/core';
 import {
   PreloadAllModules,
   provideRouter,
@@ -17,9 +21,9 @@ import {
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { provideTransloco } from '@ngneat/transloco';
 import { routes } from './app.routes';
 import { TranslocoHttpLoader } from './transloco-loader';
-import { provideTransloco } from '@ngneat/transloco';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,15 +50,17 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(provideAnalytics(() => getAnalytics())),
     ScreenTrackingService,
     UserTrackingService,
-    importProvidersFrom(provideFirestore(() => getFirestore())), provideHttpClient(), provideTransloco({
-        config: { 
-          availableLangs: ['en', 'es'],
-          defaultLang: 'en',
-          // Remove this option if your application doesn't support changing language in runtime.
-          reRenderOnLangChange: true,
-          prodMode: !isDevMode(),
-        },
-        loader: TranslocoHttpLoader
-      }),
+    importProvidersFrom(provideFirestore(() => getFirestore())),
+    provideHttpClient(),
+    provideTransloco({
+      config: {
+        availableLangs: ['en', 'es'],
+        defaultLang: 'en',
+        // Remove this option if your application doesn't support changing language in runtime.
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }),
   ],
 };
