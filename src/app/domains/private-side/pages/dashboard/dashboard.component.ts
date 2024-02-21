@@ -19,8 +19,8 @@ export class DashboardComponent {
   firestore = inject(Firestore);
 
   ngOnInit() {
-    this.addDoc();
-    this.getData();
+    // this.addDoc();
+    // this.getData();
   }
 
   async getData() {
