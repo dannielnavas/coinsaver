@@ -1,5 +1,6 @@
 import { NavbarComponent } from '@/app/shared/components/navbar/navbar.component';
-import { Component, inject } from '@angular/core';
+import { IUserGoogle } from '@/app/shared/models/user-google.model';
+import { Component, inject, signal } from '@angular/core';
 import {
   Firestore,
   addDoc,
@@ -17,10 +18,16 @@ import {
 })
 export class DashboardComponent {
   firestore = inject(Firestore);
+  user = signal<IUserGoogle>({} as IUserGoogle);
 
   ngOnInit() {
     // this.addDoc();
     // this.getData();
+    this.getDataUser();
+  }
+
+  getDataUser() {
+    this.user.set(JSON.parse(sessionStorage.getItem('user') || '{}'));
   }
 
   async getData() {
