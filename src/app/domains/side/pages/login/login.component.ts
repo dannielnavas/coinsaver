@@ -6,26 +6,42 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from '@angular/fire/auth';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   redirect = [`/dashboard`];
+  loginFrom!: FormGroup;
 
-  constructor(@Optional() private auth: Auth, private router: Router) {}
+  constructor(
+    @Optional() private auth: Auth,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.initFormLogin();
+  }
+
+  initFormLogin() {
+    this.loginFrom = this.formBuilder.group({
+      email: [''],
+      password: [''],
+    });
+  }
 
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     const data = await signInWithPopup(this.auth, provider);
     console.log(data);
+    sessionStorage.setItem('user', JSON.stringify(data));
     await this.router.navigate(this.redirect);
   }
 
@@ -35,16 +51,10 @@ export class LoginComponent {
   }
 
   async loginWithEmailAndPassword() {
-    // const data = await createUserWithEmailAndPassword(
-    //   this.auth,
-    //   'darker13@outlook.com',
-    //   '1602003139Odin!'
-    // );
-    // console.log(data);
     const user = await signInWithEmailAndPassword(
       this.auth,
-      'darker13@outlook.com',
-      '1602003139Odin!'
+      this.loginFrom.controls['email'].getRawValue(),
+      this.loginFrom.controls['password'].getRawValue()
     );
     console.log(user);
     await this.router.navigate(this.redirect);
