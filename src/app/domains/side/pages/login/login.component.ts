@@ -1,4 +1,6 @@
-import { Component, Optional } from '@angular/core';
+import { IUserGoogle } from '@/app/shared/models/user-google.model';
+import { SessionService } from '@/app/shared/services/session.service';
+import { Component, Optional, inject } from '@angular/core';
 import {
   Auth,
   GoogleAuthProvider,
@@ -19,12 +21,10 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   redirect = [`/dashboard`];
   loginFrom!: FormGroup;
-
-  constructor(
-    @Optional() private auth: Auth,
-    private router: Router,
-    private formBuilder: FormBuilder
-  ) {}
+  private sessionService = inject(SessionService);
+  private router = inject(Router);
+  private formBuilder = inject(FormBuilder);
+  @Optional() private auth = inject(Auth);
 
   ngOnInit(): void {
     this.initFormLogin();
@@ -40,8 +40,7 @@ export class LoginComponent {
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     const data = await signInWithPopup(this.auth, provider);
-    console.log(data);
-    sessionStorage.setItem('user', JSON.stringify(data));
+    this.sessionService.setUser(data as unknown as IUserGoogle);
     await this.router.navigate(this.redirect);
   }
 
@@ -56,7 +55,6 @@ export class LoginComponent {
       this.loginFrom.controls['email'].getRawValue(),
       this.loginFrom.controls['password'].getRawValue()
     );
-    console.log(user);
     await this.router.navigate(this.redirect);
   }
 }
