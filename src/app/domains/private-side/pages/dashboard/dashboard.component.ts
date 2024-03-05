@@ -1,5 +1,6 @@
 import { NavbarComponent } from '@/app/shared/components/navbar/navbar.component';
 import { IUserGoogle } from '@/app/shared/models/user-google.model';
+import { SessionService } from '@/app/shared/services/session.service';
 import { Component, inject, signal } from '@angular/core';
 import {
   Firestore,
@@ -18,30 +19,43 @@ import {
 })
 export class DashboardComponent {
   firestore = inject(Firestore);
+  private sessionService = inject(SessionService);
   user = signal<IUserGoogle>({} as IUserGoogle);
 
   ngOnInit() {
-    // this.addDoc();
-    // this.getData();
     this.getDataUser();
+    this.addDoc();
+    this.filterIncomeUser();
   }
 
   getDataUser() {
-    this.user.set(JSON.parse(sessionStorage.getItem('user') || '{}'));
+    const user = this.sessionService.getUser();
+    this.user.set(user);
   }
 
   async getData() {
     const data = (
-      await getDocs(query(collection(this.firestore, 'testPath')))
+      await getDocs(query(collection(this.firestore, 'income')))
     ).docs.map((data) => data.data());
-
     console.log(data);
   }
 
+  async filterIncomeUser() {
+    await getDocs(collection(this.firestore, 'income')).then(
+      (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, ' => ', doc.data());
+        });
+      }
+    );
+  }
+
   async addDoc() {
-    const docRef = await addDoc(collection(this.firestore, 'testPath'), {
-      test: 'test',
+    const user = this.sessionService.getUser();
+    const docRef = await addDoc(collection(this.firestore, 'income'), {
+      name: 'Salario',
+      amount: 1000,
+      user: this.user().user.uid,
     });
-    console.log('Document written with ID: ', docRef.id);
   }
 }
