@@ -1,13 +1,6 @@
-import { IUserGoogle } from '@/app/shared/models/user-google.model';
+import { AuthService } from '@/app/shared/services/auth.service';
 import { SessionService } from '@/app/shared/services/session.service';
-import { Component, Optional, inject } from '@angular/core';
-import {
-  Auth,
-  GoogleAuthProvider,
-  signInAnonymously,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from '@angular/fire/auth';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -24,7 +17,7 @@ export class LoginComponent {
   private sessionService = inject(SessionService);
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
-  @Optional() private auth = inject(Auth);
+  private authService = inject(AuthService);
 
   ngOnInit(): void {
     this.initFormLogin();
@@ -38,23 +31,21 @@ export class LoginComponent {
   }
 
   async loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    const data = await signInWithPopup(this.auth, provider);
-    this.sessionService.setUser(data as unknown as IUserGoogle);
-    await this.router.navigate(this.redirect);
+    const response = await this.authService.googleLogin();
+    this.sessionService.setUser(response);
+    this.router.navigate(this.redirect);
   }
 
   async loginAnonymously() {
-    await signInAnonymously(this.auth);
-    await this.router.navigate(this.redirect);
+    await this.authService.anomymousLogin();
+    this.router.navigate(this.redirect);
   }
 
   async loginWithEmailAndPassword() {
-    const user = await signInWithEmailAndPassword(
-      this.auth,
+    await this.authService.loginWithEmailAndPassword(
       this.loginFrom.controls['email'].getRawValue(),
       this.loginFrom.controls['password'].getRawValue()
     );
-    await this.router.navigate(this.redirect);
+    this.router.navigate(this.redirect);
   }
 }
