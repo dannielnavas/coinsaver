@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
-import { IUserGoogle } from '../models/user-google.model';
+import { UserCredential } from '@angular/fire/auth';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SessionService {
-  setUser(data: IUserGoogle) {
+  dataUser$: BehaviorSubject<UserCredential | null> =
+    new BehaviorSubject<UserCredential | null>(null);
+
+  setUser(data: UserCredential) {
     sessionStorage.setItem('user', JSON.stringify(data));
+    this.dataUser$.next(data);
   }
-  getUser(): IUserGoogle {
-    const user = sessionStorage.getItem('user');
-    return JSON.parse(user as string);
-  }
-  removeUser() {
-    sessionStorage.removeItem('user');
+  getUser(): BehaviorSubject<UserCredential | null> {
+    if (this.dataUser$.value === null)
+      this.dataUser$.next(JSON.parse(sessionStorage.getItem('user') || '{}'));
+    return this.dataUser$;
   }
 }
